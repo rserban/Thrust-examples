@@ -1,13 +1,14 @@
 #include <thrust/host_vector.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/remove.h>
+#include <thrust/count.h>
 #include <iostream>
 
 // Given a set of vectors (all of same size), remove the entries corresponding
 // to indexes tagged as 'false' in a vector of flags.
 int main(void)
 {
-  const bool  active[] = { false, true, false, true, true, false };
+  const bool  active[] = { false, true, false, true, false, false };
   const float a[] = {0.3f, 0.5f, 0.4f, 0.1f, 0.2f, 0.7f};
   const int   b[] = {3, 5, 4, 1, 2, 7};
   const double c[] = {13, 15, 14, 11, 12, 17 };
@@ -32,11 +33,18 @@ int main(void)
   // call remove if on the zipped ranges (identity predicate: remove entries tagged with 'true')
   //ZipIterator new_end = thrust::remove_if(zip_begin, zip_end, h_active.begin(), thrust::identity<bool>());
 
+  // Count number of flags set to 'true'
+  int num_flags = thrust::count_if(h_active.begin(), h_active.end(), thrust::identity<bool>());
+  std::cout << "Keep " << num_flags << " elements" << std::endl;
 
   // erase the removed elements
-  h_a.erase(thrust::get<0>(new_end.get_iterator_tuple()), h_a.end());
-  h_b.erase(thrust::get<1>(new_end.get_iterator_tuple()), h_b.end());
-  h_c.erase(thrust::get<2>(new_end.get_iterator_tuple()), h_c.end());
+  //h_a.erase(thrust::get<0>(new_end.get_iterator_tuple()), h_a.end());
+  //h_b.erase(thrust::get<1>(new_end.get_iterator_tuple()), h_b.end());
+  //h_c.erase(thrust::get<2>(new_end.get_iterator_tuple()), h_c.end());
+
+  h_a.resize(num_flags);
+  h_b.resize(num_flags);
+  h_c.resize(num_flags);
 
   // print out the contents of the vectors
   std::cout << "New a: " << std::endl;
