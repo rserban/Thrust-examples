@@ -31,7 +31,7 @@ private:
 
 #else // WIN32
 
-class CPUTimer : public Timer {
+class CPUTimer {
 protected:
   timeval timeStart;
   timeval timeEnd;
