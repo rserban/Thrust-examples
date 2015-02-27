@@ -39,6 +39,7 @@ SET( CUDA_PROPAGATE_HOST_FLAGS ON )
 # ------------------------------------------------------------------------------
 SET(DEMOS
     remove_if
+    sort_timing
     )
 
 FOREACH(PROGRAM ${DEMOS})
